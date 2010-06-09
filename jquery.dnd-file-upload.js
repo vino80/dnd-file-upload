@@ -12,12 +12,7 @@
 
 		log("adding dnd-file-upload functionalities to element with id: " + id);
 
-		if ($.browser.mozilla) {
-			dropzone.addEventListener("drop", drop, true);
-			var jQueryDropzone = $("#" + id);
-			jQueryDropzone.bind("dragenter", dragenter);
-			jQueryDropzone.bind("dragover", dragover);
-		} else {
+		if ($.client.browser == "Safari" && $.client.os == "Windows") {
 			var fileInput = $("<input>");
 			fileInput.attr( {
 				type : "file"
@@ -33,6 +28,11 @@
 				return false;
 			});
 			this.append(fileInput);
+		} else {
+			dropzone.addEventListener("drop", drop, true);
+			var jQueryDropzone = $("#" + id);
+			jQueryDropzone.bind("dragenter", dragenter);
+			jQueryDropzone.bind("dragover", dragover);
 		}
 
 		return this;
@@ -41,7 +41,7 @@
 	$.fn.dropzone.defaults = {
 		url : "",
 		method : "POST",
-		numConcurrentUploads : 1,
+		numConcurrentUploads : 3,
 		printLogs : false,
 		// update upload speed every second
 		uploadRateRefreshTime : 1000
@@ -93,16 +93,12 @@
 
 	function log(logMsg) {
 		if (opts.printLogs) {
-			console && console.log(logMsg);
+			// console && console.log(logMsg);
 		}
 	}
-	
-	var filesToUpload;
-	var uploadCount = 0;
 
 	function uploadFiles(files) {
 		$.fn.dropzone.newFilesDropped();
-		filesToUpload = new Array();
 		for ( var i = 0; i < files.length; i++) {
 			var file = files[i];
 
@@ -126,32 +122,9 @@
 			xhr.setRequestHeader("X-File-Name", file.fileName);
 			xhr.setRequestHeader("X-File-Size", file.fileSize);
 			xhr.setRequestHeader("Content-Type", "multipart/form-data");
-			
-			var xhrFileObj = new Object();
-			xhrFileObj.xhr = xhr;
-			xhrFileObj.file = file;
-			
-			filesToUpload.push(xhrFileObj);
-		}
-		
-		uploadFilesFromArray();
-	}
-	
-	function uploadFilesFromArray()
-	{
-		var obj = filesToUpload.shift();
-		if (obj != null)
-		{
-			obj.xhr.upload.downloadStartTime = new Date().getTime();
-			obj.xhr.send( obj.file );
-			uploadCount++;
-			$.fn.dropzone.uploadStarted(obj.xhr.upload.fileIndex, obj.file);
-			
-			if (uploadCount < opts.numConcurrentUploads){
-				uploadFilesFromArray();
-			}
-		} else {
-			log("no more files to upload!");
+			xhr.send(file);
+
+			$.fn.dropzone.uploadStarted(i, file);
 		}
 	}
 
@@ -160,9 +133,6 @@
 		var timeDiff = now - this.downloadStartTime;
 		$.fn.dropzone.uploadFinished(this.fileIndex, this.fileObj, timeDiff);
 		log("finished loading of file " + this.fileIndex);
-		
-		uploadCount--;
-		uploadFilesFromArray();
 	}
 
 	function progress(event) {
