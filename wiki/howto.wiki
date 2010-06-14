@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Simple showcase how the plugin is used.
 
 = How To =
 
@@ -42,5 +42,3 @@ This wiki page explains how this plugin can be used, so (multiple) files are upl
 }}}
 
 3. Finished! Your basic file upload via drag and drop is working. What you can do now is to register functions which are invoked, when specific events are fired by the drop zone. For example you can listen to the event when files have been dropped, or when the progress of an upload changed.
-
-
