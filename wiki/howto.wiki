@@ -1,0 +1,46 @@
+#summary One-sentence summary of this page.
+
+= How To =
+
+This wiki page explains how this plugin can be used, so (multiple) files are uploaded to a server via drag and drop.
+
+1. First you need to create a HTML containing a DIV ...
+
+{{{
+<html>
+    <head>
+    </head>
+    <body>
+        <div id="drop-div" style="width: 200px; height: 200px; border: thin solid black;">
+            Drop files here!
+        </div>
+    </body>
+</html>
+}}}
+
+
+2. ... and then you have to add the scripts, and tell the plugin which div shall be a drop zone and where to upload the files.
+
+{{{
+<html>
+    <head>
+       <script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+       <script src="jquery.dnd-file-upload.js" ></script>
+       <script src="jquery.client.js" ></script>
+        <script>
+            $(document).ready(function(){
+                $("#drop-div").dropzone({url : "http://localhost:8080/upload.php"});
+            });
+        </script>
+    </head>
+    <body>
+        <div id="drop-div" style="width: 200px; height: 200px; border: thin solid black;">
+            Drop files here!
+        </div>
+    </body>
+</html>
+}}}
+
+3. Finished! Your basic file upload via drag and drop is working. What you can do now is to register functions which are invoked, when specific events are fired by the drop zone. For example you can listen to the event when files have been dropped, or when the progress of an upload changed.
+
+
