@@ -41,4 +41,44 @@ This wiki page explains how this plugin can be used, so (multiple) files are upl
 </html>
 }}}
 
-3. Finished! Your basic file upload via drag and drop is working. What you can do now is to register functions which are invoked, when specific events are fired by the drop zone. For example you can listen to the event when files have been dropped, or when the progress of an upload changed.
+3. *Finished!* Your basic file upload via drag and drop is working. What you can do now is to register functions which are invoked, when specific events are fired by the drop zone. For example you can listen to the event when files have been dropped, or when the progress of an upload changed.
+
+{{{
+<html>
+    <head>
+       <script src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+       <script src="jquery.dnd-file-upload.js" ></script>
+       <script src="jquery.client.js" ></script>
+        <script>
+            $.fn.dropzone.newFilesDropped = function() {
+                // new files have been dropped
+            };
+
+            $.fn.dropzone.uploadStarted = function(fileIndex, file) {
+                // upload of file with given index has started
+            };
+
+            $.fn.dropzone.uploadFinished = function(fileIndex, file, time) {
+                // upload of file with given index has finished; upload took *time* mili seconds
+            };
+
+            $.fn.dropzone.fileUploadProgressUpdated = function(fileIndex, file, newProgress) {
+                // progress of given file has changed to *newProgress* percent
+            };
+            
+            $.fn.dropzone.fileUploadSpeedUpdated = function(fileIndex, file, KBperSecond) {
+                // upload speed of given file has changed to *KBPerSecond* KB/s
+            };
+
+            $(document).ready(function(){
+                $("#drop-div").dropzone({url : "http://localhost:8080/upload.php"});
+            });
+        </script>
+    </head>
+    <body>
+        <div id="drop-div" style="width: 200px; height: 200px; border: thin solid black;">
+            Drop files here!
+        </div>
+    </body>
+</html>
+}}}
